@@ -4,20 +4,25 @@
 
 string proof_create_string(char*);
 void proof_destroy_string(string*);
-void proof_reserve_string(string*);
+void proof_reserve_string(string);
 void proof_print_string(string);
+void proof_string_append(string, char*);
 
 int main(){
 
-    string new = proof_create_string("hola");
-    string new2 = proof_create_string("holas");
-    string new3 = proof_create_string("");
-    proof_print_string(new);
-    proof_print_string(new2);
-    proof_print_string(new3);
-    proof_destroy_string(&new);
-    proof_destroy_string(&new2);
-    proof_print_string(new2);
+    // string new = proof_create_string("hola");
+    // string new2 = proof_create_string("holas");
+    // string new3 = proof_create_string("");
+    // proof_print_string(new);
+    // proof_print_string(new2);
+    // proof_print_string(new3);
+
+    string new4 = proof_create_string("hola");
+    proof_string_append(new4, "soy");
+    proof_print_string(new4);
+    //proof_destroy_string(&new);
+    //proof_destroy_string(&new2);
+    //proof_print_string(new2);
 
     return 0;
 }
@@ -41,4 +46,13 @@ void proof_print_string(string data){
 
     if(status == ERR_NULL_PTR) printf("ERROR: no se puede imprimir ya que el puntero es nulo\n");
     else if(status == ERR_STR_EMPTY) printf("ERROR: el string esta vacio\n");
+}
+
+void proof_string_append(string string, char* data){
+
+    Status append = string_append(string, data);
+
+    if(append == ERR_NULL_PTR) printf("ERROR: puntero al string nulo\n");
+    else if(append == ERR_NULL_PTR_MEMRY) printf("ERROR: fallo del realloc\n");
+    else printf("OK: string concatenado\n");
 }

@@ -16,18 +16,18 @@ String* create_string(char* data){
 
     int length = strlength(data) + 1;
 
-    String* information = (String*) malloc(sizeof(String));
-    if(information == NULL) return NULL;
+    String* string = (String*) malloc(sizeof(String));
+    if(string == NULL) return NULL;
 
-    information->data = (char*) malloc(sizeof(length));
-    if(information->data == NULL) return NULL;
+    string->data = (char*) malloc(sizeof(length));
+    if(string->data == NULL) return NULL;
 
-    strcopy(information->data, data);
+    strcopy(string->data, data);
 
-    information->length = length;
-    information->buffer = length * 2;
+    string->length = length;
+    string->buffer = length * 2;
 
-    return information;
+    return string;
 }
 
 Status destroy_string(String** string){
@@ -46,7 +46,15 @@ Status reserve_string(String *string, long new_cap){
 
     if(string == NULL) return ERR_NULL_PTR;
 
-    string->buffer = new_cap;
+    if(new_cap > string->buffer){
+
+        char* ptr_string = realloc(string->data, new_cap);
+        if(ptr_string == NULL) return ERR_NULL_PTR_MEMRY;
+
+        string->data = ptr_string;
+        string->buffer = new_cap;
+    }
+
     return OK;
 }
 
@@ -56,15 +64,15 @@ Status print_string(String* string){
 
     else if(strlength(string->data) == 0) return ERR_STR_EMPTY;
 
-    printf("[");
-    for(int i = 0; string->data[i] != '\0'; i++){
+    int l = string->length;
+    printf("la longitud de la cadena es: %d",l);
 
-        if(string->data[i+1] == '\0'){ 
-            printf("%c",string->data[i]);
-            break;
-        }
-        printf("%c,",string->data[i]);
-    }
+    printf("[");
+    for(int i = 0; i < string->length; i++){
+        printf("%c",string->data[i]);
+
+        if(i + 1 < string->length) printf(",");
+    } 
     printf("]\n");
 
     return OK;
@@ -121,6 +129,26 @@ Status string_set(String *string, long index, char c){
 
     string->data[index] = c;
 
+    return OK;
+}
+
+Status string_append(String* string, char* data){
+
+    if(string == NULL) return ERR_NULL_PTR;
+
+    long length_data = strlength(data); // +1 para el '\0'
+    long new_size = string->length + length_data;
+
+    if(new_size+1 > string->buffer){ 
+
+        long new_buffer = string->buffer * 2;
+        Status reserve = reserve_string(string, new_buffer);
+        if(reserve != OK) return ERR_NULL_PTR_MEMRY;
+    }
+
+    // mueve el puntero al final de la cadena
+    strcopy(string->data + string->length, data);
+    string->length = new_size;
     return OK;
 }
 

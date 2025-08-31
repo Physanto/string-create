@@ -19,7 +19,8 @@ typedef enum {
     ERR_NULL_PTR, // error: puntero nulo
     ERR_NULL_PTR_STR, //error: puntero al string nulo
     ERR_INDEX_OUT_RANGE, //error: tamano nulo
-    ERR_STR_EMPTY // error: string vacio
+    ERR_STR_EMPTY, // error: string vacio
+    ERR_NULL_PTR_MEMRY
 } Status;
 
 /**
@@ -38,5 +39,6 @@ Status capacity_string(String* string, long* ptr_capacity);
 Status clear_string(String* string);
 Status string_at(String* string, long index, char* c);
 Status string_set(String* string, long index, char c);
+Status string_append(String* string, char* data);
 
 #endif
