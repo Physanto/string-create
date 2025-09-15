@@ -38,7 +38,8 @@ Status length_string(String* string, long* ptr_length);
 Status capacity_string(String* string, long* ptr_capacity);
 Status clear_string(String* string);
 Status string_at(String* string, long index, char* c);
-Status string_set(String* string, long index, char c);
-Status string_append(String* string, char* data);
+Status string_set(String* string, long index, const char c);
+Status string_append(String* string, const char* data);
+Status string_insert(String* string, long index, const char* string_add);
 
 #endif

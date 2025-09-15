@@ -7,6 +7,7 @@ void proof_destroy_string(string*);
 void proof_reserve_string(string);
 void proof_print_string(string);
 void proof_string_append(string, char*);
+void proof_string_insert(string, long, char*);
 
 int main(){
 
@@ -18,8 +19,13 @@ int main(){
     // proof_print_string(new3);
 
     string new4 = proof_create_string("hola");
-    proof_string_append(new4, "soy");
     proof_print_string(new4);
+    proof_string_insert(new4,1,"manuela");
+    proof_print_string(new4);
+    // proof_string_append(new4, "soy");
+    // proof_print_string(new4);
+    // proof_string_insert(new4,4,"manuel");
+    // proof_print_string(new4);
     //proof_destroy_string(&new);
     //proof_destroy_string(&new2);
     //proof_print_string(new2);
@@ -55,4 +61,14 @@ void proof_string_append(string string, char* data){
     if(append == ERR_NULL_PTR) printf("ERROR: puntero al string nulo\n");
     else if(append == ERR_NULL_PTR_MEMRY) printf("ERROR: fallo del realloc\n");
     else printf("OK: string concatenado\n");
+}
+
+void proof_string_insert(string string, long index, char* data){
+    
+    Status insert = string_insert(string, index, data);
+
+    if(insert == ERR_NULL_PTR) printf("ERROR: puntero al string nulo\n");
+    else if(insert == ERR_NULL_PTR_MEMRY) printf("ERROR: fallo del realloc\n");
+    else if(insert == ERR_INDEX_OUT_RANGE) printf("ERROR: index no es correcto\n");
+    else printf("OK: string insertado\n");
 }

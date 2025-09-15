@@ -4,7 +4,7 @@
 #include "../include/string.h"
 
 // Definicion de prototipos para las funciones locales a este archivo
-long strlength(char* data);
+long strlength(const char* data);
 void strcopy(char* dest, const char* src);
 
 /**
@@ -64,9 +64,8 @@ Status print_string(String* string){
 
     else if(strlength(string->data) == 0) return ERR_STR_EMPTY;
 
-    int l = string->length;
-    printf("la longitud de la cadena es: %d",l);
-
+    long l = string->length;
+    printf("longitud de la cadena %d\n",l);
     printf("[");
     for(int i = 0; i < string->length; i++){
         printf("%c",string->data[i]);
@@ -83,7 +82,7 @@ Status length_string(String* string, long* ptr_length){
     if(string == NULL) return ERR_NULL_PTR;
     *ptr_length = string->length;
 
-    if(*ptr_length == 1) *ptr_length = 0;
+    if(string->length == 1) *ptr_length = 0;
 
     return OK;
 }
@@ -132,23 +131,42 @@ Status string_set(String *string, long index, char c){
     return OK;
 }
 
-Status string_append(String* string, char* data){
+Status string_append(String* string, const char* data){
 
     if(string == NULL) return ERR_NULL_PTR;
 
-    long length_data = strlength(data); // +1 para el '\0'
+    long length_data = strlength(data);
     long new_size = string->length + length_data;
 
-    if(new_size+1 > string->buffer){ 
-
+    if(new_size > string->buffer){ 
         long new_buffer = string->buffer * 2;
         Status reserve = reserve_string(string, new_buffer);
         if(reserve != OK) return ERR_NULL_PTR_MEMRY;
     }
 
     // mueve el puntero al final de la cadena
-    strcopy(string->data + string->length, data);
+    strcopy(string->data + string->length - 1, data);
     string->length = new_size;
+    return OK;
+}
+
+Status string_insert(String* string, long index, const char* string_add){
+
+    if(string == NULL) return ERR_NULL_PTR;
+    if(index >= string->length) return ERR_INDEX_OUT_RANGE;    
+
+    long string_length = strlength(string_add);
+    long new_length = (string->length + string_length) - index;
+
+    if(new_length > string->buffer){
+        printf("aqui estoy\n");
+        long new_buffer = string->buffer * 2;
+        Status reserve = reserve_string(string, new_buffer);
+        if(reserve != OK) return ERR_NULL_PTR_MEMRY;        
+    }
+
+    strcopy(string->data + index, string_add);
+    string->length = new_length;
     return OK;
 }
 
@@ -161,7 +179,7 @@ Status string_append(String* string, char* data){
 *
 * @return long la longitud de la cadena*
 */
-long strlength(char* data){ 
+long strlength(const char* data){ 
     long i = 0;
     for(i = 0; data[i] != '\0'; i++);
     return i;
