@@ -17,19 +17,21 @@ int main(){
     // proof_print_string(new);
     // proof_print_string(new2);
     // proof_print_string(new3);
+    string new4 = proof_create_string("hola ");
+    proof_print_string(new4);
+    proof_string_append(new4, "soy ");
+    proof_print_string(new4);
+    proof_string_insert(new4,9,"yo");
+    proof_print_string(new4);
 
-    string new4 = proof_create_string("hola");
-    proof_print_string(new4);
-    proof_string_insert(new4,1,"manuela");
-    proof_print_string(new4);
-    // proof_string_append(new4, "soy");
+    string_delete(new4, 0, 14);
+    print_string(new4);
     // proof_print_string(new4);
     // proof_string_insert(new4,4,"manuel");
     // proof_print_string(new4);
     //proof_destroy_string(&new);
     //proof_destroy_string(&new2);
     //proof_print_string(new2);
-
     return 0;
 }
 

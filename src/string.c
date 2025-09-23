@@ -6,6 +6,7 @@
 // Definicion de prototipos para las funciones locales a este archivo
 long strlength(const char* data);
 void strcopy(char* dest, const char* src);
+void strcopyy(char* dest, const char* src, int);
 
 /**
 * @brief crea un string 
@@ -64,10 +65,10 @@ Status print_string(String* string){
 
     else if(strlength(string->data) == 0) return ERR_STR_EMPTY;
 
-    long l = string->length;
-    printf("longitud de la cadena %d\n",l);
+    //long l = string->length - 1;
+    //printf("longitud de la cadena %d\n",l);
     printf("[");
-    for(int i = 0; i < string->length; i++){
+    for(int i = 0; i < string->length - 1; i++){
         printf("%c",string->data[i]);
 
         if(i + 1 < string->length) printf(",");
@@ -156,7 +157,7 @@ Status string_insert(String* string, long index, const char* string_add){
     if(index >= string->length) return ERR_INDEX_OUT_RANGE;    
 
     long string_length = strlength(string_add);
-    long new_length = (string->length + string_length) - index;
+    long new_length = string_length + index + 1; //+1 del '\0'
 
     if(new_length > string->buffer){
         printf("aqui estoy\n");
@@ -167,6 +168,33 @@ Status string_insert(String* string, long index, const char* string_add){
 
     strcopy(string->data + index, string_add);
     string->length = new_length;
+    return OK;
+}
+
+Status string_delete(String *string, long index, long length){
+
+    if(string == NULL) return ERR_NULL_PTR;
+
+    if(index >= string->length) return ERR_INDEX_OUT_RANGE;
+
+    if(length > (string->length - index - 1)) return ERR_LEN_OUT_RANGE;
+    
+    char string_aux[length+1];
+    strcopy(string_aux, string->data + (index + length));
+
+    strcopy(string->data + index, string_aux);
+
+    string->length = string->length - length;
+
+    return OK;
+}
+
+Status string_convert_char(String *string, char *string_converted){
+    
+    if(string == NULL) return ERR_NULL_PTR;
+
+    strcopy(string_converted, string->data);
+
     return OK;
 }
 
@@ -202,4 +230,13 @@ void strcopy(char* dest, const char* src){
     for(i = 0; src[i] != '\0'; i++) dest[i] = src[i];
     dest[i++] = '\0';
 }
+void strcopyy(char* dest, const char* src, int j){ 
+
+    int i;
+    for(i = 0; i < j; i++) {
+        printf("se va copiar el caracter %c\n",src[i]);
+        dest[i] = src[i];
+    }
+}
+
 

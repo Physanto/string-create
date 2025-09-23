@@ -20,7 +20,8 @@ typedef enum {
     ERR_NULL_PTR_STR, //error: puntero al string nulo
     ERR_INDEX_OUT_RANGE, //error: tamano nulo
     ERR_STR_EMPTY, // error: string vacio
-    ERR_NULL_PTR_MEMRY
+    ERR_NULL_PTR_MEMRY, //error: memory allocator fallo
+    ERR_LEN_OUT_RANGE //error: longitud pasada de rango
 } Status;
 
 /**
@@ -41,5 +42,7 @@ Status string_at(String* string, long index, char* c);
 Status string_set(String* string, long index, const char c);
 Status string_append(String* string, const char* data);
 Status string_insert(String* string, long index, const char* string_add);
+Status string_delete(String* string, long index, long length);
+Status string_convert_char(String* string, char* string_converted);
 
 #endif
