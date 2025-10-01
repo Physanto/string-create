@@ -1,12 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "../include/string.h"
+
+struct String{
+    char* data;
+    long length;
+    long buffer;
+};
 
 // Definicion de prototipos para las funciones locales a este archivo
 long strlength(const char* data);
 void strcopy(char* dest, const char* src);
-void strcopyy(char* dest, const char* src, int);
 
 /**
 * @brief crea un string 
@@ -119,7 +123,7 @@ Status string_at(String* string, long index, char* c){
     return OK;
 }
 
-Status string_set(String *string, long index, char c){ 
+Status string_set(String *string, long index, const char c){ 
 
     if(string == NULL) return ERR_NULL_PTR;
 
@@ -189,7 +193,7 @@ Status string_delete(String *string, long index, long length){
     return OK;
 }
 
-Status string_convert_char(String *string, char *string_converted){
+Status string_convert_char(String* string, char* string_converted){
     
     if(string == NULL) return ERR_NULL_PTR;
 
@@ -229,14 +233,6 @@ void strcopy(char* dest, const char* src){
     int i;
     for(i = 0; src[i] != '\0'; i++) dest[i] = src[i];
     dest[i++] = '\0';
-}
-void strcopyy(char* dest, const char* src, int j){ 
-
-    int i;
-    for(i = 0; i < j; i++) {
-        printf("se va copiar el caracter %c\n",src[i]);
-        dest[i] = src[i];
-    }
 }
 
 
