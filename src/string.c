@@ -2,6 +2,17 @@
 #include <stdlib.h>
 #include "../include/string.h"
 
+/*
+* Estructura que representa un string dinamico en el heap
+* data: corresponde a la cadena de caracteres.
+* length: corresponde a la longitud de la cadena contando el caracter nulo '\0'.
+* buffer: representa un espacio adicional listo para ingresar una cadena de caracteres mas grande.
+* 
+* Ejm: para la cadena "Hola a todos".
+* data: "Hola a todos".
+* length: 13.
+* buffer: 26, o sea que puede ingresar una cadena de 13 caracteres mas a la cadena original. Ejm: "Hola a todos______________".
+*/
 struct String{
     char* data;
     long length;
@@ -12,9 +23,27 @@ struct String{
 long strlength(const char* data);
 void strcopy(char* dest, const char* src);
 
-/**
-* @brief crea un string 
+/*
+* Esta funcion crea un struct 'String' en el heap.
 *
+* es importante aclarar que nuestro data no apunta al primer caracter de una cadena en el stack sino que reservamos espacio para almacenar
+* toda la cadena en el heap (por eso pedimos espacio y luego usamos strcopy() para que data contenga toda la cadena en el heap).
+* Ejm: data = "Hola".
+*
+* el buffer se le asigna un espacio inicial del doble de la longitud de la cadena de caracteres que se acaba de crear, esto lo hacemos para
+* que no tengamos llamadas al sistema cada nada, asi que manejamos como una reserva del doble de la cadena inicial.
+*
+* la funcion retorna un puntero al struct 'String', es decir.
+*
+* stack                                                         heap
+*   proof.c                                               |---->  struct 'String'
+* |-------------------------------------|                 |    |------------------------|
+* | string string_new = create_string() |-----------------|    | data: "Hola a todos\0" |
+* |-------------------------------------|                      |------------------------|
+* |                                     |                      | length: 13             |
+* |-------------------------------------|                      |------------------------|
+* |                                     |                      | buffer: 26             |
+* |-------------------------------------|                      |------------------------|
 *
 */
 String* create_string(char* data){
@@ -35,6 +64,53 @@ String* create_string(char* data){
     return string;
 }
 
+/*
+* La funcion se encarga de destruir todo el struct 'String' del heap para liberar memoria cuando esta ya no se necesita.
+*
+* primero se libera el puntero que apunta al puntero que contiene la cadena de caracteres.
+*
+* despues se libera el puntero que apunta al struct en el heap.
+*
+* y por ultimo ponemos en NULL el struct que esta en el heap.
+*
+* con esto ya hacemos que el struct no consuma memoria.
+* 
+* llama a la funcion create_string() y esta le retorna un puntero donde se encuentra el struct 'String'.
+* stack                                                         heap
+*   proof.c                                               |---->  struct 'String'
+* |-------------------------------------|                 |    |------------------------|
+* | string string_new = create_string() |-----------------|    | data: "Hola a todos\0" |
+* |-------------------------------------|                      |------------------------|
+* |                                     |                      | length: 13             |
+* |-------------------------------------|                      |------------------------|
+* |                                     |                      | buffer: 26             |
+* |-------------------------------------|                      |------------------------|
+*
+* Ahora llamamos a la funcion destroy_string que se encargara de liberar el struct 'String' de la memoria ocupada en el heap.
+* stack                      heap
+* |**********************|    |****************************|
+* |   proof.c            |    |   struct 'String'          | X: liberado
+* | |------------------| |    | |------------------------| |
+* | | destroy_string() | |    | | data: "Hola a todos\0" | | X: liberado
+* | |------------------| |    | |------------------------| |
+* | |                  | |    | | length: 13             | |
+* | |------------------| |    | |------------------------| |
+* | |                  | |    | | buffer: 26             | |
+* | |------------------| |    | |------------------------| |
+* |                      |    |                            |
+* |**********************|    |****************************|
+*
+* entonces asi quedaria el puntero string_new que apunta al struct 'String'
+* stack                                              heap
+*   proof.c                                            struct 'String'          X: liberado
+* |-------------------------------------|            |------------------------|
+* | string string_new = NULL            |            | data: "Hola a todos\0" | X: liberado
+* |-------------------------------------|            |------------------------|
+* |                                     |            | length: 13             |
+* |-------------------------------------|            |------------------------|
+* |                                     |            | buffer: 26             |
+* |-------------------------------------|            |------------------------|
+*/
 Status destroy_string(String** string){
 
     if(string == NULL) return ERR_NULL_PTR;    
@@ -47,6 +123,11 @@ Status destroy_string(String** string){
     return OK;
 }
 
+/*
+* La funcion reserva espacio adicional para una cadena mas grande, esta se almacena en el buffer del struct 'String'.
+*
+*
+*/
 Status reserve_string(String *string, long new_cap){
 
     if(string == NULL) return ERR_NULL_PTR;
