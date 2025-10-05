@@ -18,27 +18,15 @@ void proof_string_convert_char(string, char*);
 
 int main(){
 
-    // string new = proof_create_string("hola");
-    // string new2 = proof_create_string("holas");
-    // string new3 = proof_create_string("");
-    // proof_print_string(new);
-    // proof_print_string(new2);
-    // proof_print_string(new3);
-    string new4 = proof_create_string("hola ");
-    proof_print_string(new4);
-    proof_string_append(new4, "soy ");
-    proof_print_string(new4);
-    proof_string_insert(new4,9,"yo");
-    proof_print_string(new4);
+    string str_new = proof_create_string("Hola");
+    proof_print_string(str_new);
+    proof_length_string(str_new);
 
-    string_delete(new4, 0, 14);
-    print_string(new4);
-    // proof_print_string(new4);
-    // proof_string_insert(new4,4,"manuel");
-    // proof_print_string(new4);
-    //proof_destroy_string(&new);
-    //proof_destroy_string(&new2);
-    //proof_print_string(new2);
+    printf("-----------------\n\n");
+    proof_string_append(str_new, " amigo");
+    proof_print_string(str_new);
+    proof_length_string(str_new);
+    
     return 0;
 }
 
